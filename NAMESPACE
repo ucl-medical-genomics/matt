@@ -3,4 +3,6 @@
 import(data.table)
 importFrom(BSgenome,getBSgenome)
 importFrom(BSgenome,installed.genomes)
-importFrom(BSgenome,seqnames)
+importFrom(stats,cor)
+importFrom(stats,mad)
+importFrom(utils,combn)

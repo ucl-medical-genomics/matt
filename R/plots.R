@@ -6,7 +6,7 @@ draw_all_heatmaps <- function(dt, fname_prefix, title = FALSE, subtitle = NULL,
                               legend_justification = "right",
                               plots_dir = COMPARISONS_PLOTS_DIR) {
   title <- NULL
-  fname <- glue("{fname_prefix}_mae")
+  fname <- glue::glue("{fname_prefix}_mae")
   if (identical(title, FALSE)) title <- "Pairwise Comparisons: MAE"
   draw_comparison_heatmap(dt, plots_dir, fname, xlab, ylab, title, "MAE",
     text_field = "display_mae", text_size = text_size, subtitle = subtitle,
@@ -15,7 +15,7 @@ draw_all_heatmaps <- function(dt, fname_prefix, title = FALSE, subtitle = NULL,
     legend_justification = legend_justification)
 
   if (!identical(dt$display_mae, dt$display_corrected_mae)) {
-    fname <- glue("{fname_prefix}_corrected_mae")
+    fname <- glue::glue("{fname_prefix}_corrected_mae")
     if (identical(title, FALSE)) title <- "Pairwise Comparisons: Corrected MAE"
     draw_comparison_heatmap(dt, plots_dir, fname, xlab, ylab, title,
       "Corrected MAE", fill_field = "corrected_mae",
@@ -25,7 +25,7 @@ draw_all_heatmaps <- function(dt, fname_prefix, title = FALSE, subtitle = NULL,
       legend_justification = legend_justification)
   }
   if (!identical(dt$display_mae, dt$display_mae_with_penalty)) {
-    fname <- glue("{fname_prefix}_mae_with_penalty")
+    fname <- glue::glue("{fname_prefix}_mae_with_penalty")
     if (identical(title, FALSE)) {
       title <- "Pairwise Comparisons: MAE With Missing Penalty"
     }
@@ -37,7 +37,7 @@ draw_all_heatmaps <- function(dt, fname_prefix, title = FALSE, subtitle = NULL,
       legend_justification = legend_justification)
   }
   if (!identical(dt$display_rmse, dt$display_rmse_with_penalty)) {
-    fname <- glue("{fname_prefix}_rmse_with_penalty")
+    fname <- glue::glue("{fname_prefix}_rmse_with_penalty")
     if (identical(title, FALSE)) {
       title <- "Pairwise Comparisons: RMSE With Missing Penalty"
     }
@@ -48,14 +48,14 @@ draw_all_heatmaps <- function(dt, fname_prefix, title = FALSE, subtitle = NULL,
       show_labels = show_labels, legend_location = legend_location,
       legend_justification = legend_justification)
   }
-  fname <- glue("{fname_prefix}_RMSE")
+  fname <- glue::glue("{fname_prefix}_RMSE")
   if (identical(title, FALSE)) title <- "Pairwise Comparisons: RMSE"
   draw_comparison_heatmap(dt, plots_dir, fname, xlab, ylab, title, "RMSE",
     fill_field = "rmse", text_field = "display_rmse", text_size = text_size,
     subtitle = subtitle, width = width, height = height,
     show_labels = show_labels, legend_location = legend_location,
     legend_justification = legend_justification)
-  fname <- glue("{fname_prefix}_R")
+  fname <- glue::glue("{fname_prefix}_R")
   if (identical(title, FALSE)) {
     title <- "Pairwise Comparisons: Pearson Correlation (R)"
   }
@@ -65,7 +65,7 @@ draw_all_heatmaps <- function(dt, fname_prefix, title = FALSE, subtitle = NULL,
     show_labels = show_labels, legend_location = legend_location,
     legend_justification = legend_justification
   )
-  fname <- glue("{fname_prefix}_num")
+  fname <- glue::glue("{fname_prefix}_num")
   if (identical(title, FALSE)) {
     title <- "Pairwise Comparisons: Num of Overlapping CpG sites"
   }
@@ -90,9 +90,9 @@ draw_comparison_heatmap <- function(dt, dir, fname, xlab, ylab, title,
                                     legend_justification = "center",
                                     limits = NULL, width = 8, height = 8) {
   if (rev_colour) {
-    colors <- colorRampPalette(rev(brewer.pal(9, "YlOrRd")))(32)
+    colors <- grDevices::colorRampPalette(rev(brewer.pal(9, "YlOrRd")))(32)
   } else {
-    colors <- colorRampPalette(brewer.pal(9, "YlOrRd"))(32)
+    colors <- grDevices::colorRampPalette(brewer.pal(9, "YlOrRd"))(32)
   }
   if (is.null(text_field)) {
     text_field <- fill_field
@@ -118,9 +118,9 @@ draw_comparison_heatmap <- function(dt, dir, fname, xlab, ylab, title,
   if (identical(reverse_y, TRUE)) g <- g + scale_y_discrete(limits = rev)
   if (identical(reverse_x, TRUE)) g <- g + scale_x_discrete(limits = rev)
 
-  ggsave(glue("{dir}/hq/{fname}.pdf"), plot = g, device = "pdf", width = width,
+  ggsave(glue::glue("{dir}/hq/{fname}.pdf"), plot = g, device = "pdf", width = width,
          height = height)
-  ggsave(glue("{dir}/{fname}.jpg"), plot = g, device = "jpg", dpi = 600,
+  ggsave(glue::glue("{dir}/{fname}.jpg"), plot = g, device = "jpg", dpi = 600,
          width = width, height = height)
 
   return(g)
@@ -161,9 +161,9 @@ draw_smooth_scatter <- function(dt_summary, dt_x, dt_y, fname, xlab, ylab,
 
   if (identical(separate_legend, TRUE)) {
     g_legend <- cowplot::get_legend(g)
-    ggsave(plot = g_legend, glue("{dir}/hq/{fname}-legend.pdf"), device = "pdf",
+    ggsave(plot = g_legend, glue::glue("{dir}/hq/{fname}-legend.pdf"), device = "pdf",
            width = 1.1, height = 2)
-    ggsave(plot = g_legend, glue("{dir}/{fname}-legend.jpg"), device = "jpg",
+    ggsave(plot = g_legend, glue::glue("{dir}/{fname}-legend.jpg"), device = "jpg",
            dpi = 600, width = 1.1, height = 2)
 
     g <- g + theme(legend.position = "none")
@@ -176,11 +176,11 @@ draw_smooth_scatter <- function(dt_summary, dt_x, dt_y, fname, xlab, ylab,
 
   if (identical(return_plot_object, TRUE)) return(g)
 
-  ggsave(plot = g, glue("{dir}/hq/{fname}.pdf"), device = "pdf", width = width,
+  ggsave(plot = g, glue::glue("{dir}/hq/{fname}.pdf"), device = "pdf", width = width,
          height = height)
-  ggsave(plot = g, glue("{dir}/{fname}.jpg"), device = "jpg", dpi = 600,
+  ggsave(plot = g, glue::glue("{dir}/{fname}.jpg"), device = "jpg", dpi = 600,
          width = width, height = height)
-  return(glue("{dir}/{fname}.jpg"))
+  return(glue::glue("{dir}/{fname}.jpg"))
 }
 
 add_axis_bar_plot <- function(g, dt, x_field, y_field, axis, coord_flip = FALSE,
@@ -199,10 +199,10 @@ preprocess_smooth_scatter_data <- function(dt, x_field = "meth.x",
                                            round_data = FALSE, x_round_by = 0.1,
                                            y_round_by = 0.1) {
   if (identical(round_data, TRUE)) {
-    dt[, glue("rounded.{x_field}") := round_any(get(x_field), x_round_by)]
-    dt[, glue("rounded.{y_field}") := round_any(get(y_field), y_round_by)]
-    dt_summary <- dt[, .N, by = c(glue("rounded.{c(x_field, y_field)}"))]
-    setnames(dt_summary, c(glue("rounded.{c(x_field, y_field)}")),
+    dt[, glue::glue("rounded.{x_field}") := round_any(get(x_field), x_round_by)]
+    dt[, glue::glue("rounded.{y_field}") := round_any(get(y_field), y_round_by)]
+    dt_summary <- dt[, .N, by = c(glue::glue("rounded.{c(x_field, y_field)}"))]
+    setnames(dt_summary, c(glue::glue("rounded.{c(x_field, y_field)}")),
              c(x_field, y_field))
   } else {
     dt_summary <- dt[, .N, by = c(x_field, y_field)]
@@ -212,8 +212,8 @@ preprocess_smooth_scatter_data <- function(dt, x_field = "meth.x",
 
 summarise_smoothscatter_marginal_data <- function(dt, field, round_data) {
   if (identical(round_data, TRUE)) {
-    s_dt <- dt[, .N, by = c(glue("rounded.{field}"))]
-    setnames(s_dt, glue("rounded.{field}"), field)
+    s_dt <- dt[, .N, by = c(glue::glue("rounded.{field}"))]
+    setnames(s_dt, glue::glue("rounded.{field}"), field)
   } else {
     s_dt <- dt[, .N, by = field]
   }
@@ -262,13 +262,13 @@ run_draw_smooth_scatter <- function(d1_string, d2_string, fname_prefix = "ss",
   if (is.null(xlab_prefix)) xlab_prefix <- d1_string
   if (is.null(ylab_prefix)) ylab_prefix <- d2_string
   if (identical(show_coverage_in_label, TRUE)) {
-    xlab_prefix <- glue("{xlab_prefix} ({get_mean_cov(d1_string)})")
-    ylab_prefix <- glue("{ylab_prefix} ({get_mean_cov(d2_string)})")
+    xlab_prefix <- glue::glue("{xlab_prefix} ({get_mean_cov(d1_string)})")
+    ylab_prefix <- glue::glue("{ylab_prefix} ({get_mean_cov(d2_string)})")
   }
 
-  xlab <- glue("{xlab_prefix} - Percent methylation")
-  ylab <- glue("{ylab_prefix} - Percent methylation")
-  fname <- glue("{fname_prefix}-{d1_string[1]}-vs-{d2_string[1]}")
+  xlab <- glue::glue("{xlab_prefix} - Percent methylation")
+  ylab <- glue::glue("{ylab_prefix} - Percent methylation")
+  fname <- glue::glue("{fname_prefix}-{d1_string[1]}-vs-{d2_string[1]}")
 
   if (identical(add_subtitle_summary, TRUE)) {
     subtitle <- generate_dt_summary_string(dt, x_field, y_field)
@@ -313,14 +313,14 @@ draw_venn_diagram_plot <- function(venn_stats, fname, sample_titles) {
     }
   }
 
-  jpeg(glue("{fname}.jpg"), width = 1200, height = 1200, res = 600,
+  grDevices::jpeg(glue::glue("{fname}.jpg"), width = 1200, height = 1200, res = 600,
     pointsize = 2.7)
   grid.draw(g)
-  dev.off()
+  grDevices::dev.off()
 
-  # pdf(file = glue("{fname}.pdf"), pointsize = 8.5)
+  # pdf(file = glue::glue("{fname}.pdf"), pointsize = 8.5)
   # grid.draw(g)
-  # dev.off()
+  # grDevices::dev.off()
 }
 
 draw_venn_diagram <- function(dt, fname, cache_key = "venn_data",
@@ -331,12 +331,12 @@ draw_venn_diagram <- function(dt, fname, cache_key = "venn_data",
                               from_cache = TRUE, update_cache = TRUE) {
   cached_fname <- get_fname(cache_key, "cache", ".fst")
   if (file.exists(cached_fname) && from_cache) {
-    log_info("=> Reading from Cache: {cached_fname}")
-    venn_stats <- read_fst(cached_fname, as.data.table = TRUE)
+    logger::log_info("=> Reading from Cache: {cached_fname}")
+    venn_stats <- fst::read_fst(cached_fname, as.data.table = TRUE)
   } else {
     venn_stats <- calculate_venn_params(dt, sample_list)
     if (update_cache) {
-      write_fst(venn_stats, path = cached_fname)
+      fst::write_fst(venn_stats, path = cached_fname)
     }
   }
   draw_venn_diagram_plot(venn_stats, fname, sample_titles)

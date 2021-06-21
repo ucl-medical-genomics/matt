@@ -1,10 +1,10 @@
 generate_annotations <- function(ref_cpgs, cache_key = "hg19_annot",
                                 from_cache = TRUE, update_cache = TRUE) {
-  fst_file <- get_fname(glue("ref_cpgs_annotations-{tolower(cache_key)}"),
+  fst_file <- get_fname(glue::glue("ref_cpgs_annotations-{tolower(cache_key)}"),
                         "cache", ".fst")
   if (file.exists(fst_file) && identical(from_cache, TRUE)) {
-    log_info("=> Reading from Cache: {fst_file}")
-    dt <- read_fst(fst_file, as.data.table = TRUE)
+    logger::log_info("=> Reading from Cache: {fst_file}")
+    dt <- fst::read_fst(fst_file, as.data.table = TRUE)
     return(dt)
   }
   levels <- c("genes_intergenic", "genes_1to5kb", "genes_promoters",
@@ -36,8 +36,8 @@ generate_annotations <- function(ref_cpgs, cache_key = "hg19_annot",
   dt[, annotation := fifelse(type %in% cpg_labels, "CpG", "Genomic")]
   setkey(dt, chr, start)
   if (identical(update_cache, TRUE)) {
-    log_info("=> Writing to Cache: {fst_file}")
-    write_fst(dt, path = fst_file)
+    logger::log_info("=> Writing to Cache: {fst_file}")
+    fst::write_fst(dt, path = fst_file)
   }
   return(dt)
 }
@@ -49,9 +49,9 @@ annotate_dt <- function(dt, ref_cpgs_annot) {
   merged_summary <- merged[, .(
     N = .N,
     y0 = min(abs_diff, na.rm = TRUE),
-    y25 = quantile(abs_diff, 0.25, na.rm = TRUE),
-    y50 = median(abs_diff, na.rm = TRUE),
-    y75 = quantile(abs_diff, 0.75, na.rm = TRUE),
+    y25 = stats::quantile(abs_diff, 0.25, na.rm = TRUE),
+    y50 = stats::median(abs_diff, na.rm = TRUE),
+    y75 = stats::quantile(abs_diff, 0.75, na.rm = TRUE),
     y100 = max(abs_diff, na.rm = TRUE)
   ), by = .(type, annotation)]
 

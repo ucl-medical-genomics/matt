@@ -24,4 +24,11 @@ Imports:
     fs,
     logger,
     stringr,
-    BSgenome
+    BSgenome,
+    Biostrings,
+    GenomicRanges,
+    IRanges,
+    ggplot2,
+    grDevices,
+    cowplot,
+    ggpubr

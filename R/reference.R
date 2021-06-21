@@ -36,12 +36,13 @@ get_ref_cpgs <- function(key, ref_genome = "BSgenome.Hsapiens.UCSC.hg19",
 #' Extracts all CpGs from a genome
 #' @param ref_genome BSgenome object or name of the installed BSgenome package.
 #'    Example: BSgenome.Hsapiens.UCSC.hg19
-#' @importFrom BSgenome installed.genomes getBSgenome seqnames
+#' @param contigs A vector showing the contigs in the BSgenome object
+#' @importFrom BSgenome installed.genomes getBSgenome
 #' @return a list of data.table containing number of CpG's and contig lengths
 extract_cpg_sites <- function(ref_genome = NULL,
   contigs = c(glue::glue("chr{1:22}"), "chrX", "chrY")) {
   pkgname <- chr <- NULL
-  gnoms_installed = BSgenome::installed.genomes(splitNameParts = TRUE)
+  gnoms_installed <- BSgenome::installed.genomes(splitNameParts = TRUE)
   data.table::setDT(x = gnoms_installed)
 
   if (nrow(gnoms_installed) == 0) {
@@ -82,7 +83,7 @@ extract_cpg_sites <- function(ref_genome = NULL,
   )]
   data.table::setkey(cpgs, "chr", "start")
 
-  num_of_cpgs <- format(nrow(cpgs), big.mark = ',')
+  num_of_cpgs <- format(nrow(cpgs), big.mark = ",")
   logger::log_info("=> Extracted {num_of_cpgs} CpG Sites")
   return(list(cpgs = cpgs))
 }

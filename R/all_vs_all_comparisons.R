@@ -25,23 +25,23 @@ all_vs_all_comparisons <- function(samples_summary, cache_key, x_dt_keys,
   fst_file <- get_fname(cache_key, "cache", ".fst")
 
   if (file.exists(fst_file) && identical(from_cache, TRUE)) {
-    log_info("=> Reading from Cache: {fst_file}")
-    dt <- read_fst(fst_file, as.data.table = TRUE)
+    logger::log_info("=> Reading from Cache: {fst_file}")
+    dt <- fst::read_fst(fst_file, as.data.table = TRUE)
   } else {
     all_samples <- generate_dt_permutations(samples_summary$dt_key)
-    log_info("=> Found Combinations : {all_samples[, .N]}")
+    logger::log_info("=> Found Combinations : {all_samples[, .N]}")
 
     f_all_samples <- all_samples[d_name_1 %in% x_dt_keys &
       d_name_2 %in% y_dt_keys]
-    log_info("=> Filtered Combinations : {f_all_samples[, .N]}")
+    logger::log_info("=> Filtered Combinations : {f_all_samples[, .N]}")
 
     dt <- f_all_samples[,
       get_summary(d_name_1, d_name_2, subset_sites, meth_display = meth_display),
       by = .(d_name_1, d_name_2)
     ]
 
-    fwrite(dt, file = glue("{CSV_DATA_DIR}/{cache_key}.csv"))
-    write_fst(dt, fst_file)
+    fwrite(dt, file = glue::glue("{CSV_DATA_DIR}/{cache_key}.csv"))
+    fst::write_fst(dt, fst_file)
   }
 
   # Add the reverse -Add info on samples B-A using data from samples A-B
@@ -79,7 +79,7 @@ reformat_dt_axis_titles <- function(dt, x_dt_keys = FALSE, y_dt_keys = FALSE,
     # Rename the levels to add coverage to the end
     levels(dt$d_title_1) <- sapply(x_dt_keys, function(x) {
       if (identical(x_title_cov, TRUE)) {
-        glue("{str_sub(x, x_sub_start)}\n({get_mean_cov(x)})")
+        glue::glue("{str_sub(x, x_sub_start)}\n({get_mean_cov(x)})")
       } else {
         str_sub(x, x_sub_start)
       }
@@ -92,7 +92,7 @@ reformat_dt_axis_titles <- function(dt, x_dt_keys = FALSE, y_dt_keys = FALSE,
     # Rename the levels to add coverage to the end
     levels(dt$d_title_2) <- sapply(y_dt_keys, function(x) {
       if (identical(y_title_cov, TRUE)) {
-        glue("{str_sub(x, y_sub_start)}\n({get_mean_cov(x)})")
+        glue::glue("{str_sub(x, y_sub_start)}\n({get_mean_cov(x)})")
       } else {
         str_sub(x, y_sub_start)
       }
@@ -120,8 +120,8 @@ get_average_comp <- function(dt_orig) {
   dt_mean <- dt_mean[, .SD, .SDcols = unique(names(dt_mean))]
 
   dt_mean[, `:=`(
-    d_title_1 = glue("D{set_cov_1}\n({cov_1}x)", .envir = .SD),
-    d_title_2 = glue("D{set_cov_2}\n({cov_2}x)", .envir = .SD)
+    d_title_1 = glue::glue("D{set_cov_1}\n({cov_1}x)", .envir = .SD),
+    d_title_2 = glue::glue("D{set_cov_2}\n({cov_2}x)", .envir = .SD)
   )]
 
   levels_1 <- dt_mean[order(set_cov_1), unique(d_title_1)]

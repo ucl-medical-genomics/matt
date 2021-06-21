@@ -12,6 +12,8 @@ extract_cpg_sites(
 \arguments{
 \item{ref_genome}{BSgenome object or name of the installed BSgenome package.
 Example: BSgenome.Hsapiens.UCSC.hg19}
+
+\item{contigs}{A vector showing the contigs in the BSgenome object}
 }
 \value{
 a list of data.table containing number of CpG's and contig lengths

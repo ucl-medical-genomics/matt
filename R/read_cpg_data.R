@@ -24,7 +24,7 @@ read_cpg_data <- function(fname, dataset_id = NULL, pipeline = "bedgraph",
 
 # e.g.
 # read_data(fname, "bedgraph")
-# read_data(fname, "bedgraph", cmd = glue("zcat {fname} | grep -v '^track'"))
+# read_data(fname, "bedgraph", cmd = glue::glue("zcat {fname} | grep -v '^track'"))
 read_data <- function(fname, pipeline, cmd = NULL, ...) {
   headers <- get_header_names(pipeline$cols)
   select_cols <- unlist(pipeline$cols, use.names = FALSE)
@@ -134,7 +134,7 @@ get_header_names <- function(pipeline) {
 }
 
 remove_leading_chr <- function(dt) {
-  tmp_dt <- c(head(dt)[["chr"]], tail(dt)[["chr"]])
+  tmp_dt <- c(utils::head(dt)[["chr"]], utils::tail(dt)[["chr"]])
   presence_of_chr <- stringr::str_starts(tmp_dt, stringr::coll("chr"))
   if (any(presence_of_chr)) {
     logger::log_info("==> Removing `chr` from chromosome column...")
@@ -185,9 +185,10 @@ merge_strand_information <- function(dt, pipeline, collapse_strands) {
 }
 
 # upper_cov_cutoff list(method = "percentile", value = 0.999)
+#' @importFrom stats mad
 mask_technical_noise <- function(dt, upper_cov_cutoff) {
   if (upper_cov_cutoff$method == "percentile") {
-    max_cov <- dt[!is.na(cov), quantile(cov, upper_cov_cutoff$value)]
+    max_cov <- dt[!is.na(cov), stats::quantile(cov, upper_cov_cutoff$value)]
   } else if (upper_cov_cutoff$method == "mad") {
     max_cov <- dt[!is.na(cov), mean(cov) + (3 * mad(cov))]
   }

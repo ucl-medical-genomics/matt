@@ -1,4 +1,5 @@
 # MATT: Methylation Analysis ToolkiT
+[![R-CMD-check](https://github.com/IsmailM/matt/workflows/R-CMD-check/badge.svg)](https://github.com/IsmailM/matt/actions)
 
 > Pre-release (things may not fully work yet)
 

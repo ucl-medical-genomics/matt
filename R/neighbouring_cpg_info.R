@@ -30,8 +30,8 @@ generate_corr_matrix <- function(dt, grouping = c("dt_key", "chr")) {
                                  dist <= 500, round_any(dist, 10),
                                  dist <= 2000, round_any(dist, 100))]
 
-  corr_matrix <- meth_corr[!is.na(round_dist), .(corr = cor(meth_0, meth_1)),
-    by = round_dist]
+  corr_matrix <- meth_corr[!is.na(round_dist),
+    .(corr = stats::cor(meth_0, meth_1)), by = round_dist]
   corr_matrix <- corr_matrix[!is.na(corr), .(dist = round_dist, corr)]
   return(corr_matrix)
 }
@@ -82,10 +82,10 @@ annotate_corr_data <- function(dt){
 #   setorder(tmp, "chr", "start")
 
 #   tmp[to_impute == FALSE, c(
-#     glue("down_{meth_field}_{j}"),
-#     glue("up_{meth_field}_{j}"),
-#     glue("down_start_{j}"),
-#     glue("up_start_{j}")
+#     glue::glue("down_{meth_field}_{j}"),
+#     glue::glue("up_{meth_field}_{j}"),
+#     glue::glue("down_start_{j}"),
+#     glue::glue("up_start_{j}")
 #   ) := c(
 #     lapply(j, function(x) data.table::shift(get(meth_field), n = x)),
 #     lapply(j, function(x) {
@@ -96,11 +96,11 @@ annotate_corr_data <- function(dt){
 #   ), by = c("chr", additional_grouping)]
 
 #   tmp[, c(
-#     glue("down_dist_{j}"),
-#     glue("up_dist_{j}")
+#     glue::glue("down_dist_{j}"),
+#     glue::glue("up_dist_{j}")
 #   ) := c(
-#     lapply(j, function(x) get(glue("down_start_{x}")) - start),
-#     lapply(j, function(x) get(glue("up_start_{x}")) - start)
+#     lapply(j, function(x) get(glue::glue("down_start_{x}")) - start),
+#     lapply(j, function(x) get(glue::glue("up_start_{x}")) - start)
 #   )]
 
 #   if (!identical(update_original, TRUE)) return(tmp)
@@ -114,9 +114,9 @@ annotate_corr_data <- function(dt){
 #                                              meth_field = "meth.y",
 #                                              additional_grouping = c()) {
 #   j <- seq_len(num_neighbours)
-#   meth_fields <- c(glue("down_{meth_field}_{j}"), glue("up_{meth_field}_{j}"))
-#   all_fields <- c(meth_fields, glue("down_start_{j}"), glue("up_start_{j}"),
-#                   glue("down_dist_{j}"), glue("up_dist_{j}"))
+#   meth_fields <- c(glue::glue("down_{meth_field}_{j}"), glue::glue("up_{meth_field}_{j}"))
+#   all_fields <- c(meth_fields, glue::glue("down_start_{j}"), glue::glue("up_start_{j}"),
+#                   glue::glue("down_dist_{j}"), glue::glue("up_dist_{j}"))
 
 #   lapply(meth_fields, function(field) {
 #     dt[to_impute == FALSE & is.na(get(field)), to_impute := TRUE]
@@ -138,74 +138,74 @@ annotate_corr_data <- function(dt){
 #   mdt <- copy(mdt_orig)
 
 #   # mdt[, all_fields] are all from dt_ref (with repeated rows nearest)
-#   setnames(mdt, all_fields, glue("n.{all_fields}"))
+#   setnames(mdt, all_fields, glue::glue("n.{all_fields}"))
 #   # mdt[, i.{all_fields}] are all from dt and contain orig values for to_impute
-#   setnames(mdt, glue("i.{all_fields}"), all_fields)
+#   setnames(mdt, glue::glue("i.{all_fields}"), all_fields)
 
 #   # switch meth.y and i.meth.y
 #   mdt[, c("meth.y", "n.meth.y") := .SD, .SDcols = c("i.meth.y", "meth.y")]
 #   setcolorder(mdt, names(dt))
 
 #   mdt[start < n.down_start_1,
-#     c(glue("n.{all_fields}"), "nearest_start") := NA]
-#   mdt[start > n.up_start_1, c(glue("n.{all_fields}"), "nearest_start") := NA]
+#     c(glue::glue("n.{all_fields}"), "nearest_start") := NA]
+#   mdt[start > n.up_start_1, c(glue::glue("n.{all_fields}"), "nearest_start") := NA]
 
 #   mdt[start < nearest_start, c(
 #     "up_start_1",
-#     glue("up_{meth_field}_1")
+#     glue::glue("up_{meth_field}_1")
 #   ) := c(
 #     .(as.integer(nearest_start)),
-#     .(get(glue("n.{meth_field}")))
+#     .(get(glue::glue("n.{meth_field}")))
 #   )]
 #   mdt[start < nearest_start, c(
-#     glue("up_start_{tail(j, -1)}"),
-#     glue("up_{meth_field}_{tail(j, -1)}"),
-#     glue("down_start_{j}"),
-#     glue("down_{meth_field}_{j}")
+#     glue::glue("up_start_{tail(j, -1)}"),
+#     glue::glue("up_{meth_field}_{tail(j, -1)}"),
+#     glue::glue("down_start_{j}"),
+#     glue::glue("down_{meth_field}_{j}")
 #   ) := c(
-#     lapply(head(j, -1), function(x) get(glue("n.up_start_{x}"))),
-#     lapply(head(j, -1), function(x) get(glue("n.up_{meth_field}_{x}"))),
-#     lapply(j, function(x) get(glue("n.down_start_{x}"))),
-#     lapply(j, function(x) get(glue("n.down_{meth_field}_{x}")))
+#     lapply(head(j, -1), function(x) get(glue::glue("n.up_start_{x}"))),
+#     lapply(head(j, -1), function(x) get(glue::glue("n.up_{meth_field}_{x}"))),
+#     lapply(j, function(x) get(glue::glue("n.down_start_{x}"))),
+#     lapply(j, function(x) get(glue::glue("n.down_{meth_field}_{x}")))
 #   )]
 
 #   # start > start.x -> When is up_stream of the closest neighbour
 #   mdt[start > nearest_start, c(
 #     "down_start_1",
-#     glue("down_{meth_field}_1")
+#     glue::glue("down_{meth_field}_1")
 #   ) := c(
 #     .(as.integer(nearest_start)),
-#     .(get(glue("n.{meth_field}")))
+#     .(get(glue::glue("n.{meth_field}")))
 #   )]
 #   mdt[start > nearest_start, c(
-#     glue("up_start_{j}"),
-#     glue("up_{meth_field}_{j}"),
-#     glue("down_start_{tail(j, -1)}"),
-#     glue("down_{meth_field}_{tail(j, -1)}")
+#     glue::glue("up_start_{j}"),
+#     glue::glue("up_{meth_field}_{j}"),
+#     glue::glue("down_start_{tail(j, -1)}"),
+#     glue::glue("down_{meth_field}_{tail(j, -1)}")
 #   ) := c(
-#     lapply(j, function(x) get(glue("n.up_start_{x}"))),
-#     lapply(j, function(x) get(glue("n.up_{meth_field}_{x}"))),
-#     lapply(head(j, -1), function(x) get(glue("n.down_start_{x}"))),
-#     lapply(head(j, -1), function(x) get(glue("n.down_{meth_field}_{x}")))
+#     lapply(j, function(x) get(glue::glue("n.up_start_{x}"))),
+#     lapply(j, function(x) get(glue::glue("n.up_{meth_field}_{x}"))),
+#     lapply(head(j, -1), function(x) get(glue::glue("n.down_start_{x}"))),
+#     lapply(head(j, -1), function(x) get(glue::glue("n.down_{meth_field}_{x}")))
 #   )]
 
 #   set(mdt, NULL, subset(names(mdt), startsWith(names(mdt), "n.")), NULL)
 
 #   # recalculate all distances
 #   mdt[, c(
-#     glue("down_dist_{j}"),
-#     glue("up_dist_{j}")
+#     glue::glue("down_dist_{j}"),
+#     glue::glue("up_dist_{j}")
 #   ) := c(
-#     lapply(j, function(x) ifelse(get(glue("down_start_{x}")) >= start, NA, get(glue("down_start_{x}")) - start)),
-#     lapply(j, function(x) ifelse(get(glue("up_start_{x}")) <= start, NA, get(glue("up_start_{x}")) - start))
+#     lapply(j, function(x) ifelse(get(glue::glue("down_start_{x}")) >= start, NA, get(glue::glue("down_start_{x}")) - start)),
+#     lapply(j, function(x) ifelse(get(glue::glue("up_start_{x}")) <= start, NA, get(glue::glue("up_start_{x}")) - start))
 #   )]
 
 #   # Remove all cases where downstream is actually upstream or vice versa
 #   lapply(j, function(x) {
-#     mdt[is.na(get(glue("up_dist_{x}"))) | is.na(get(glue("down_dist_{x}"))), 
-#       c(glue("up_start_{x}"), glue("up_{meth_field}_{x}"),
-#         glue("down_start_{x}"), glue("down_{meth_field}_{x}"),
-#         glue("down_dist_{x}"), glue("up_dist_{x}")
+#     mdt[is.na(get(glue::glue("up_dist_{x}"))) | is.na(get(glue::glue("down_dist_{x}"))), 
+#       c(glue::glue("up_start_{x}"), glue::glue("up_{meth_field}_{x}"),
+#         glue::glue("down_start_{x}"), glue::glue("down_{meth_field}_{x}"),
+#         glue::glue("down_dist_{x}"), glue::glue("up_dist_{x}")
 #         ) := NA]
 #   })
 #   return(mdt)

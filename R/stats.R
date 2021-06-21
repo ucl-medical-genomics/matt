@@ -2,9 +2,9 @@ summarise_data <- function(dt, field = "value", round_data = TRUE,
                             round_by = 1, keep_field_name = TRUE,
                             by_c = c("sample", "name")) {
   if (identical(round_data, TRUE)) {
-    dt[, glue("rounded.{field}") := round_any(get(field), round_by)]
+    dt[, glue::glue("rounded.{field}") := round_any(get(field), round_by)]
     orig_field <- field
-    field <- glue("rounded.{field}")
+    field <- glue::glue("rounded.{field}")
   }
 
   summarised_dt <- dt[, .N, by = c(field, by_c)]
@@ -22,18 +22,18 @@ compare_datasets_from_strings <- function(d1_string, d2_string,
   dt2_cache_key <- tolower(d2_string)
   cached_fname <- get_compare_cache_fname(dt1_cache_key, dt2_cache_key)
   if (from_cache & file.exists(cached_fname)) {
-    log_info("=> Reading from Cache: {cached_fname}")
-    dt <- read_fst(cached_fname, as.data.table = TRUE, columns = cache_columns)
+    logger::log_info("=> Reading from Cache: {cached_fname}")
+    dt <- fst::read_fst(cached_fname, as.data.table = TRUE, columns = cache_columns)
     return(dt)
   }
-  dt1 <- get(glue("d_{dt1_cache_key}"))
-  dt2 <- get(glue("d_{dt2_cache_key}"))
+  dt1 <- get(glue::glue("d_{dt1_cache_key}"))
+  dt2 <- get(glue::glue("d_{dt2_cache_key}"))
   if (!identical(subset_sites, FALSE)) {
     dt1 <- merge(subset_sites, dt1, all.x = TRUE, by = c("chr", "start"))
     dt2 <- merge(subset_sites, dt2, all.x = TRUE, by = c("chr", "start"))
 
-    dt1_cache_key <- glue("sub_{dt1_cache_key}")
-    dt2_cache_key <- glue("sub_{dt2_cache_key}")
+    dt1_cache_key <- glue::glue("sub_{dt1_cache_key}")
+    dt2_cache_key <- glue::glue("sub_{dt2_cache_key}")
   }
   dt <- compare_data(dt1, dt2, dt1_cache_key, dt2_cache_key,
                      from_cache = from_cache)
@@ -45,8 +45,8 @@ compare_data <- function(x, y, x_cache_key, y_cache_key,
                          update_cache = TRUE, cache_columns = NULL) {
   cached_fname <- get_compare_cache_fname(x_cache_key, y_cache_key)
   if (from_cache & file.exists(cached_fname)) {
-    log_info("=> Reading from Cache: {cached_fname}")
-    dt <- read_fst(cached_fname, as.data.table = TRUE, columns = cache_columns)
+    logger::log_info("=> Reading from Cache: {cached_fname}")
+    dt <- fst::read_fst(cached_fname, as.data.table = TRUE, columns = cache_columns)
     return(dt)
   }
   dt <- merge(x, y, all = TRUE, by = by_index)
@@ -59,11 +59,12 @@ compare_data <- function(x, y, x_cache_key, y_cache_key,
   )]
   dt[, `:=`(abs_diff = abs(diff), s_diff = diff ^ 2)]
   if (update_cache) {
-    write_fst(dt, path = cached_fname)
+    fst::write_fst(dt, path = cached_fname)
   }
   return(dt)
 }
 
+#' @importFrom stats cor
 generate_dt_summary <- function(dt_orig, x_field = "meth.x", y_field = "meth.y",
                                 cov_filter = 10, extra_fields = c(),
                                 missing_penalty = 0.5) {
@@ -74,7 +75,7 @@ generate_dt_summary <- function(dt_orig, x_field = "meth.x", y_field = "meth.y",
   dt <- copy(dt_orig)
   dt_alt <- dt[!is.na(get(x_field)) & !is.na(get(y_field)) &
                cov.x >= cov_filter & cov.y >= cov_filter]
-  corr <- cor(dt_alt[, get(x_field)], dt_alt[, get(y_field)])
+  corr <- stats::cor(dt_alt[, get(x_field)], dt_alt[, get(y_field)])
   data <- dt[cov.x >= cov_filter & cov.y >= cov_filter, .(
     overlap = .N,
     mae = mean(abs_diff, na.rm = TRUE),
@@ -125,7 +126,7 @@ generate_dt_summary_string <- function(dt, x_field = "meth.x",
 
   }
   return(
-    glue("{overlap} CpG sites; R: {r}; R^2: {r2}; MAE: {mae} ; RMSE: {rmse}\n",
+    glue::glue("{overlap} CpG sites; R: {r}; R^2: {r2}; MAE: {mae} ; RMSE: {rmse}\n",
       "(With missing penalty: MAE: {p_mae}; RMSE: {p_rmse})",
       overlap = format(data[, overlap], big.mark = ","),
       r = round(data[, r], 3), r2 = round(data[, r2], 3),
@@ -142,14 +143,15 @@ generate_single_dt_summary_string <- function(dt, field = "meth",
   mean <- round(dt[, mean(get(field), na.rm = TRUE)], 3)
   sd <- round(dt[, sd(get(field), na.rm = TRUE)], 3)
   cov <- round(dt[, mean(get(cov_field), na.rm = TRUE)], 3)
-  q <- round(dt[, quantile(get(field), na.rm = TRUE)], 3)
-  str <- glue("Number of CpG sites: {num}; Mean: {mean}; SD: {sd}; ",
+  q <- round(dt[, stats::quantile(get(field), na.rm = TRUE)], 3)
+  str <- glue::glue("Number of CpG sites: {num}; Mean: {mean}; SD: {sd}; ",
               "Quantiles: [{q[1]}, {q[2]}, {q[3]}, {q[4]}, {q[5]}]; ",
               "Mean CpG Depth: {cov}.")
   return(str)
 }
 
 # produce all combinations from a vector
+#' @importFrom utils combn
 generate_dt_permutations <- function(dt_keys) {
   perm <- as.data.table(t(combn(dt_keys, 2)))
   setnames(perm, c("V1", "V2"), c("d_name_1", "d_name_2"))
@@ -158,14 +160,14 @@ generate_dt_permutations <- function(dt_keys) {
 
 get_mean_cov <- function(dataset_key, cov_filter = 10) {
   if (length(dataset_key) == 1) {
-    dt <- get(glue("d_{tolower(dataset_key)}"))
+    dt <- get(glue::glue("d_{tolower(dataset_key)}"))
     cov <- dt[cov >= cov_filter, round(mean(cov))]
   } else {
     cov <- round(mean(sapply(dataset_key, function (key) {
-      dt <- get(glue("d_{tolower(key)}"))
+      dt <- get(glue::glue("d_{tolower(key)}"))
       return(dt[cov >= cov_filter, mean(cov)])
     })))
   }
 
-  return(glue("{cov}x"))
+  return(glue::glue("{cov}x"))
 }
