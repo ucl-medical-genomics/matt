@@ -2,46 +2,6 @@
 
 > Pre-release (things may not fully work yet)
 
-# TODO
-Add specific version of data.table (e.g. if we use fcase etc.)
-
-options("matt.placeholder_mode")
-options("matt.cache_directory") -> default ./matt_cache_store
-
-
-external: 
-* read_cpg_data()
-
-* annotate()
-* annotate.nearest.neighbours()
-
-* data_statistics()
-
-
-
-* as.matt.table(, cols = ())
-  * data.table
-  * data.frame
-  * BSSEq object
-  * Genomic Ranges object
-* as.data.frame()
-* as.genomic.range()
-
-* pair_wise_comparison
-* all_vs_all
-* collapse_all --> into a matrix
-
-* plot 
-
-
-
-
--> run:
-- `document()`, `check()` `install()` `test()`
-
-
-
-
 ## Introduction
 
 
@@ -72,3 +32,42 @@ remotes::install_github("IsmailM/matt")
 ## Citation
 
 Manuscript in preparation
+
+
+
+
+# TODO
+Add specific version of data.table (e.g. if we use fcase etc.)
+
+options("matt.placeholder_mode")
+options("matt.cache_directory") -> default ./matt_cache_store
+
+
+external: 
+* read_cpg_data()
+
+* annotate()
+* annotate.nearest.neighbours()
+
+* data_statistics()
+
+
+
+* as.matt.table(, cols = ())
+  * data.table
+  * data.frame
+  * BSSEq object
+  * Genomic Ranges object
+* as.data.frame()
+* as.genomic.range()
+
+* pair_wise_comparison
+* all_vs_all
+* collapse_all --> into a matrix
+
+* plot
+
+-> run:
+- `document()`, `check()` `install()` `test()`
+
+
