@@ -22,4 +22,8 @@ Imports:
     glue,
     fs,
     logger,
-    stringr
+    stringr,
+    BSgenome,
+    GenomicRanges,
+    Biostrings,
+    IRanges

@@ -12,3 +12,4 @@
   .matt_env[["cache_dir"]] <- getOption("matt.cache_directory",
     default = "./matt_cache_store")
 }
+

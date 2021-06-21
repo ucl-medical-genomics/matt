@@ -19,6 +19,4 @@ reference = "hg19"
 align_to_reference = TRUE
 
 m_dt_all <- align_to_ref(m_dt, reference, align_to_reference)
-
-
 check()
