@@ -48,10 +48,7 @@ external:
 
 * annotate()
 * annotate.nearest.neighbours()
-
 * data_statistics()
-
-
 
 * as.matt.table(, cols = ())
   * data.table
