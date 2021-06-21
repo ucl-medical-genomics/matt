@@ -2,8 +2,11 @@ pacman::p_load(devtools)
 here::here()
 fname = here::here('../r/d/orig/S1_W1_D05_1.orig.bed.gz') 
 load_all()
+dt <- read_cpg_data(fname, "S1_W1_D05_1")
+
 pipeline <- process_pipeline("bedgraph")
 dt <- read_data(fname, pipeline)
+mdt <- 
 
 remove_leading_chr(dt)
 convert_meth_to_frac(dt, pipeline)

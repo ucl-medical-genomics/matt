@@ -1,6 +1,6 @@
 
 # pipeline == begraph or gemBS
-# customs pipeline can 
+# for customs pipeline, pipeline needs to be a list
 read_cpg_data <- function(fname, dataset_id = NULL, pipeline = "bedgraph",
   zero_based = TRUE, collapse_strands = TRUE,
   upper_cov_cutoff = list(method = "percentile", value = 0.999),
@@ -52,7 +52,7 @@ process_data <- function(dt, pipeline, collapse_strands, upper_cov_cutoff,
   }
 
   mask_technical_noise(m_dt, upper_cov_cutoff)
-  align_to_ref(m_dt, reference, align_to_reference)
+  m_dt_all <- align_to_ref(m_dt, reference, align_to_reference)
 
   setcolorder(m_dt_all, c("chr", "start", "cov", "meth"))
   setkey(m_dt_all, chr, start)
@@ -197,10 +197,10 @@ mask_technical_noise <- function(dt, upper_cov_cutoff) {
 
 align_to_ref <- function(dt, ref_name, align_to_reference) {
   if (identical(align_to_reference, TRUE)) {
-    logger::log_info("=> Aligning data to reference dataset: {ref_name}")
+    logger::log_info("==> Aligning data to reference dataset: {ref_name}")
     # check if reference is included in dataset 
     ref_cpg_data <- load_ref_data(ref_name)
-    setkey(m_dt, chr, start)
+    setkey(dt, chr, start)
     dt_all <- dt[ref_cpg_data]
     return(dt_all)
   } else {
