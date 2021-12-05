@@ -5,22 +5,29 @@ load_ref_data <- function(key, ...) {
 
   # check local cache
   if (!fs::file_exists(ref_file)) {
-    ref_file <- fs::path(.matt_env[["cache_dir"]], "reference-{key}.fst")
+    logger::log_info("Reference data not included in the MATT package")
+
+    ref_file <- fs::path(.matt_env[["cache_dir"]],
+      glue::glue("reference-{key}.fst"))
   }
 
   # check for file again
   if (fs::file_exists(ref_file)) {
+    logger::log_info("Reference data found in local cache")
     dt <- fst::read_fst(ref_file, as.data.table = TRUE)
   } else {
+    logger::log_info("Reference data not included in local cache.",
+    "Generating reference data")
+
     dt <- get_ref_cpgs(...)
   }
   return(dt)
 }
 
+# TODO: Automatically set ref_genome to different libraries based on key
 get_ref_cpgs <- function(key, ref_genome = "BSgenome.Hsapiens.UCSC.hg19",
-                         all_chromosomes = c(seq(1, 22), "X", "Y"),
-                         dir = .matt_env[["cache_dir"]],
-                         update_cache = TRUE) {
+  all_chromosomes = c(seq(1, 22), "X", "Y"), dir = .matt_env[["cache_dir"]],
+  update_cache = TRUE) {
   all_cpgs <- extract_cpg_sites(ref_genome = ref_genome)
   ref_cpgs <- all_cpgs$cpgs
   ref_cpgs[, chr := stringr::str_sub(chr, start = 4L)]
