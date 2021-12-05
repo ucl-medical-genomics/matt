@@ -133,12 +133,14 @@ get_header_names <- function(pipeline) {
   return(compact_headers)
 }
 
+# TODO - check for alternative Chr formatting (e.g. case insentive) and remove
+# this using fixed("Chr") etc.
 remove_leading_chr <- function(dt) {
   tmp_dt <- c(utils::head(dt)[["chr"]], utils::tail(dt)[["chr"]])
-  presence_of_chr <- stringr::str_starts(tmp_dt, stringr::coll("chr"))
+  presence_of_chr <- stringr::str_starts(tmp_dt, stringr::fixed("chr"))
   if (any(presence_of_chr)) {
     logger::log_info("==> Removing `chr` from chromosome column...")
-    dt[, chr := stringr::str_replace(chr, stringr::coll("chr"), "")]
+    dt[, chr := stringr::str_replace(chr, stringr::fixed("chr"), "")]
   }
 }
 
