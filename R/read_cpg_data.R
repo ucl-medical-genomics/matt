@@ -1,10 +1,13 @@
 
+# TODO validate arguments first - e.g. check if reference is supported etc. 
+# This is a long running task so makes sense to return any issues straight away
+
 # pipeline == begraph or gemBS
 # for customs pipeline, pipeline needs to be a list
 read_cpg_data <- function(fname, dataset_id = NULL, pipeline = "bedgraph",
   zero_based = TRUE, collapse_strands = TRUE,
   upper_cov_cutoff = list(method = "percentile", value = 0.999),
-  reference = "hg19", align_to_reference = TRUE,
+  reference = "hg19", align_to_reference = TRUE, compress = 100,
   use_cache = TRUE, update_cache = TRUE) {
 
   dt <- read_cache_file(cache_id = dataset_id, use_cache = use_cache)
@@ -13,7 +16,7 @@ read_cpg_data <- function(fname, dataset_id = NULL, pipeline = "bedgraph",
     dt <- read_data(fname, pipeline)
     dt <- process_data(dt, pipeline, collapse_strands, upper_cov_cutoff,
       reference, align_to_reference)
-    write_cache_file(dt, dataset_id)
+    write_cache_file(dt, dataset_id, compress = compress)
   }
 
   return(dt)
