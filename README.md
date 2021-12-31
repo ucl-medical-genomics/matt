@@ -91,3 +91,12 @@ Note:
 ## Test Data
 
 * bismark_coverage_CpG.bed - Extended bedGraph output from bismark as provided by methylKit.
+
+## Testing
+
+```
+# Load `matt` 
+devtools::load_all()
+# Run all tests in tests/testthat
+devtools::test()
+```
