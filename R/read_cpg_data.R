@@ -16,7 +16,9 @@ read_cpg_data <- function(fname, dataset_id = NULL, pipeline = "bedgraph",
     dt <- read_data(fname, pipeline)
     dt <- process_data(dt, pipeline, collapse_strands, upper_cov_cutoff,
       reference, align_to_reference)
+    if(!is.null(dataset_id)){
     write_cache_file(dt, dataset_id, compress = compress)
+    }
   }
 
   return(dt)
