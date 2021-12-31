@@ -68,4 +68,22 @@ external:
 -> run:
 - `document()`, `check()` `install()` `test()`
 
+## Developer Quickstart
 
+```
+# Get repository
+git clone https://github.com/ucl-medical-genomics/matt.git
+cd matt
+
+# Set Bioconductor sources
+Rscript -e 'install.packages("BiocManager"); options(repos = BiocManager::repositories())'
+
+# Install packages in DESCRIPTION file
+Rscript -e 'install.packages()'
+
+# Load matt
+devtools::load_all()
+```
+
+Note:
+- XML install error may occur if R<=v4.0. Resolve by installing R 3.9-0.
