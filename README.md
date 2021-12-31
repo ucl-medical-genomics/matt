@@ -87,3 +87,7 @@ devtools::load_all()
 
 Note:
 - XML install error may occur if R<=v4.0. Resolve by installing R 3.9-0.
+
+## Test Data
+
+* bismark_coverage_CpG.bed - Extended bedGraph output from bismark as provided by methylKit.
