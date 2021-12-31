@@ -16,7 +16,7 @@ write_cache_file <- function (dt, cache_id, dir = .matt_env[["cache_dir"]],
     logger::log_info("=> Cache Directory not found. Creating directory: {dir}")
     fs::dir_create(dir)
   }
-  fst_path <- fs::path(dir, glue("{cache_id}.fst"))
+  fst_path <- fs::path(dir, glue::glue("{cache_id}.fst"))
   logger::log_info("=> Writing to Cache: {fst_path}")
   fst::write_fst(dt, fst_path, compress)
 }
