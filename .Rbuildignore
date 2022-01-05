@@ -1,3 +1,5 @@
+^renv$
+^renv\.lock$
 ^LICENSE\.md$
 ^data-raw$
 matt_cache_store
@@ -5,3 +7,5 @@ inst/extdata/reference-hg19.fst
 inst/extdata/reference-hg38.fst
 test_script.r
 ^\.github$
+^.*\.Rproj$
+^\.Rproj\.user$
