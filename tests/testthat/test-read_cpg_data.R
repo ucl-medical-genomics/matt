@@ -35,16 +35,20 @@ test_that("read_cpg_data using cache", {
   bed_2f <- system.file("extdata", "bismark_coverage_CpG.bedgraph", package="matt")
   expect_true(!file.exists(expected_cache_file))
   
-  # Read CpG data
+  # Read CpG data from file
   dt <- read_cpg_data(
     bed_2f, dataset_id=test_id, pipeline="bedgraph",
     align_to_reference = F, use_cache=T,
     collapse_strands = F
   )
   expect_true(file.exists(expected_cache_file))
-  file.remove(expected_cache_file)
   
-  # Reset cache
+  # Read CpG data from cache
+  dt2 <- read_cpg_data(NULL, dataset_id=test_id, use_cache=T)
+  expect_true("data.table" %in% class(dt2))
+  
+  # Cleanup and reset cache
+  file.remove(expected_cache_file)
   .matt_env[["cache_dir"]] <- original_cache
 })
 
