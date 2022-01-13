@@ -19,3 +19,33 @@ test_that("read_cpg_data without cache", {
     )
   )
 })
+
+test_that("read_cpg_data using cache", {
+  # Test: cache file is written when use_cache=TRUE AND dataset_id is not NULL
+  
+  # Set cache directory to temporary location
+  # TODO: Place this in general testthat setup/teardown
+  original_cache <- .matt_env[["cache_dir"]]
+  .matt_env[["cache_dir"]] <- tempdir()
+  test_id = "test_file"
+  expected_cache_file = file.path(.matt_env[["cache_dir"]], paste0(test_id, ".fst"))
+  
+  
+  # Load external data
+  bed_2f <- system.file("extdata", "bismark_coverage_CpG.bedgraph", package="matt")
+  expect_true(!file.exists(expected_cache_file))
+  
+  # Read CpG data
+  dt <- read_cpg_data(
+    bed_2f, dataset_id=test_id, pipeline="bedgraph",
+    align_to_reference = F, use_cache=T,
+    collapse_strands = F
+  )
+  expect_true(file.exists(expected_cache_file))
+  file.remove(expected_cache_file)
+  
+  # Reset cache
+  .matt_env[["cache_dir"]] <- original_cache
+})
+
+# Test: correct data is retrieved when use_cache=TRUE AND dataset_id is not NULL
