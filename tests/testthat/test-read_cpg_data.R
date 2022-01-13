@@ -52,4 +52,4 @@ test_that("read_cpg_data using cache", {
   .matt_env[["cache_dir"]] <- original_cache
 })
 
-# Test: correct data is retrieved when use_cache=TRUE AND dataset_id is not NULL
+# TODO: Test behaviour of update_cache
