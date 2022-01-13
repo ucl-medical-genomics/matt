@@ -5,3 +5,7 @@
 .DS_Store
 matt_cache_store
 inst/extdata/*fst
+renv/
+renv.lock
+.Rprofile
+*.Rproj
