@@ -1,28 +1,56 @@
-
-# TODO validate arguments first - e.g. check if reference is supported etc. 
-# This is a long running task so makes sense to return any issues straight away
-
-# pipeline == begraph or gemBS
-# for customs pipeline, pipeline needs to be a list
-read_cpg_data <- function(fname, dataset_id = NULL, pipeline = "bedgraph",
-  zero_based = TRUE, collapse_strands = TRUE,
-  upper_cov_cutoff = list(method = "percentile", value = 0.999),
-  reference = "hg19", align_to_reference = TRUE, compress = 100,
-  use_cache = TRUE, update_cache = TRUE) {
-
-  dt <- read_cache_file(cache_id = dataset_id, use_cache = use_cache)
-  if (is.null(dt)) {
-    pipeline <- process_pipeline(pipeline)
-    dt <- read_data(fname, pipeline)
-    dt <- process_data(dt, pipeline, collapse_strands, upper_cov_cutoff,
-      reference, align_to_reference)
-    if(!is.null(dataset_id)){
-    write_cache_file(dt, dataset_id, compress = compress)
+#' Read CpG data in MATT
+#'
+#' @param fname Path to data file.
+#' @param dataset_id Unique identifier for CpG dataset in cache.
+#' @param pipeline Pipeline for data processing. Supports "bedgraph", "gembs" or 
+#'     custom format as a `list`. 
+#' @param zero_based Input file positions use 0-based indexing.
+#' @param collapse_strands If `TRUE`, collapse forward and reverse strand data.
+#' @param upper_cov_cutoff Filter for technical coverage errors.
+#' @param reference Reference genome for CpG filling (alignment). Supports "hg19" and "hg38"
+#' @param align_to_reference If `TRUE`, align or fill missing CpG sites based on reference.
+#' @param compress Degree of compression for data cache (0-100).
+#' @param use_cache If `TRUE`, save dataset to MATT cache using `dataset_id`
+#' @param update_cache If `TRUE`, overwrite data in MATT cache using `dataset_id`
+#'
+#' @return A `data.table` with processed CpG data
+#' @export
+#'
+#' @examples
+#' infile <- system.file("extdata", "bismark_coverage_CpG.bedgraph", package="matt")
+#' dt <- read_cpg_data(infile, align_to_reference=F)
+read_cpg_data <-
+  function(fname,
+           dataset_id = NULL,
+           pipeline = "bedgraph",
+           zero_based = TRUE,
+           collapse_strands = TRUE,
+           upper_cov_cutoff = list(method = "percentile", value = 0.999),
+           reference = "hg19",
+           align_to_reference = TRUE,
+           compress = 100,
+           use_cache = TRUE,
+           update_cache = TRUE) {
+    
+    dt <- read_cache_file(cache_id = dataset_id, use_cache = use_cache)
+    
+    if (is.null(dt)) {
+      pipeline <- process_pipeline(pipeline)
+      dt <- read_data(fname, pipeline)
+      dt <-
+        process_data(dt,
+                     pipeline,
+                     collapse_strands,
+                     upper_cov_cutoff,
+                     reference,
+                     align_to_reference)
+      if (!is.null(dataset_id)) {
+        write_cache_file(dt, dataset_id, compress = compress)
+      }
     }
+    
+    return(dt)
   }
-
-  return(dt)
-}
 
 
 #### Internal Functions
