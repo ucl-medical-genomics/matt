@@ -62,7 +62,7 @@ Rscript -e 'install.packages()'
 
 ### Run tests
 
-```
+```bash
 # Load `matt` 
 devtools::load_all()
 # Run all tests in tests/testthat
