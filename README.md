@@ -68,4 +68,32 @@ external:
 -> run:
 - `document()`, `check()` `install()` `test()`
 
+## Developer Quickstart
 
+```
+# Get repository
+git clone https://github.com/ucl-medical-genomics/matt.git
+cd matt
+
+# Set Bioconductor sources
+Rscript -e 'install.packages("BiocManager"); options(repos = BiocManager::repositories())'
+
+# Install packages in DESCRIPTION file
+Rscript -e 'install.packages()'
+```
+
+Note:
+- XML install error may occur if R<=v4.0. Resolved by installing XML package version 3.9-0.
+
+### Test Data Info
+
+* bismark_coverage_CpG.bed - Extended bedGraph output from bismark as provided by methylKit.
+
+### Run tests
+
+```
+# Load `matt` 
+devtools::load_all()
+# Run all tests in tests/testthat
+devtools::test()
+```
