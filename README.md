@@ -60,10 +60,6 @@ Rscript -e 'install.packages("BiocManager"); options(repos = BiocManager::reposi
 Rscript -e 'install.packages()'
 ```
 
-### Test Data Info
-
-* bismark_coverage_CpG.bed - Extended bedGraph output from bismark as provided by methylKit.
-
 ### Run tests
 
 ```
