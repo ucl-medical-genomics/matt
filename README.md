@@ -19,58 +19,36 @@ MATT does not import any existing methylation libraries but is designed from the
 MATT makes it feasible to work and analyse WGBS datasets on a large scale.
 
 
-## Tutorial
-
-
-
-
 ## Installation 
 
 ```r
 remotes::install_github("IsmailM/matt")
 ```
 
+> Note: XML install error may occur if R<=v4.0. Resolved by installing XML package version 3.9-0.
+
+
 ## Citation
 
-Manuscript in preparation
+> Manuscript in preparation
 
 
 
+## Tutorial
 
-# TODO
-Add specific version of data.table (e.g. if we use fcase etc.)
+```r
+test_data <- system.file("extdata", "bismark_coverage_CpG.bedgraph", package="matt")
+dt <- read_cpg_data(infile, align_to_reference=F)
 
-options("matt.placeholder_mode")
-options("matt.cache_directory") -> default ./matt_cache_store
+# with local cache
+dt <- read_cpg_data(infile, "sample_1", align_to_reference=F)
 
+```
 
-external: 
-* read_cpg_data()
-
-* annotate()
-* annotate.nearest.neighbours()
-* data_statistics()
-
-* as.matt.table(, cols = ())
-  * data.table
-  * data.frame
-  * BSSEq object
-  * Genomic Ranges object
-* as.data.frame()
-* as.genomic.range()
-
-* pair_wise_comparison
-* all_vs_all
-* collapse_all --> into a matrix
-
-* plot
-
--> run:
-- `document()`, `check()` `install()` `test()`
 
 ## Developer Quickstart
 
-```
+```bash
 # Get repository
 git clone https://github.com/ucl-medical-genomics/matt.git
 cd matt
@@ -81,9 +59,6 @@ Rscript -e 'install.packages("BiocManager"); options(repos = BiocManager::reposi
 # Install packages in DESCRIPTION file
 Rscript -e 'install.packages()'
 ```
-
-Note:
-- XML install error may occur if R<=v4.0. Resolved by installing XML package version 3.9-0.
 
 ### Test Data Info
 
