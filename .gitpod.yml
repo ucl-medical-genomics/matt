@@ -13,8 +13,8 @@ tasks:
 # Settings
 vscode:
   extensions:
-    - Ikuyadeu.r@1.2.1:z5vr1v1bfS++U/aHLSXQ6Q==
-
+    - Ikuyadeu.r
+  
 # # List the ports to expose. Learn more https://www.gitpod.io/docs/config-ports/
 # ports:
 #   - port: 3000
