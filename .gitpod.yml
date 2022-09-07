@@ -3,13 +3,16 @@ image:
   file: .gitpod.Dockerfile
 
 # List the start up tasks. Learn more https://www.gitpod.io/docs/config-start-tasks/
+# Init runs during prebuild.
 tasks:
   - name: Setup
     init: > # In YAML, > introduces spaces while | introduces newlines.
-      Rscript 
-      -e 'install.packages("BiocManager"); options(repos = BiocManager::repositories())'
-      -e 'install.packages("remotes", repos="https://cran.ma.imperial.ac.uk/")'
-      -e 'remotes::install_github("ucl-medical-genomics/matt")' # runs during prebuild
+      Rscript -e '
+        r = getOption("repos"); r["CRAN"]="http://cran.us.r-project.org"; options(repos=r);
+        install.packages("BiocManager"); options(repos = BiocManager::repositories()); 
+        install.packages("remotes");
+        remotes::install_github("ucl-medical-genomics/matt")
+      '
     command: echo 'Run R setup'
 
 # Settings
