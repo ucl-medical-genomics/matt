@@ -6,7 +6,7 @@ image:
 tasks:
   - name: Setup
     init: > # In YAML, > introduces spaces while | introduces newlines.
-      Rscript -e 'install.packages("remotes")'
+      Rscript -e 'install.packages("remotes", repos="https://cran.ma.imperial.ac.uk/")'
       -e 'remotes::install_github("ucl-medical-genomics/matt")' # runs during prebuild
     command: echo 'Run R setup'
 
