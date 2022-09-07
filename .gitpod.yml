@@ -10,7 +10,8 @@ tasks:
       Rscript -e '
         r = getOption("repos"); r["CRAN"]="http://cran.us.r-project.org"; options(repos=r);
         install.packages("remotes");
-        remotes::install_github("ucl-medical-genomics/matt")
+        remotes::install_github("ucl-medical-genomics/matt");
+        remotes::install_local(dependencies="Suggests")
       '
     command: echo 'Run R setup'
 
