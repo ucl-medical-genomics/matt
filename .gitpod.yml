@@ -9,9 +9,9 @@ tasks:
     init: > # In YAML, > introduces spaces while | introduces newlines. XML libs required to build XML properly?
       Rscript -e '
         r = getOption("repos"); r["CRAN"]="http://cran.us.r-project.org"; options(repos=r);
-        install.packages("remotes");
+        install.packages(c("remotes", "devtools")));
         remotes::install_github("ucl-medical-genomics/matt");
-        remotes::install_local(dependencies="Suggests")
+        remotes::install_local(".", dependencies="Suggests")
       '
     command: echo 'Run R setup'
 
