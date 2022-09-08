@@ -7,3 +7,6 @@ RUN brew install libxml2
 RUN brew install xmlsec1
 # For ragg install as part of devtools
 RUN brew install libtiff
+
+ENV RENV_PATHS_CACHE "/workspace/matt/renv"
+ENV RENV_PATHS_LIBRARY "/workspace/matt/renv"
