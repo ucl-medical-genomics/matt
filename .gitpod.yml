@@ -14,6 +14,9 @@ tasks:
         remotes::install_github("ucl-medical-genomics/matt");
         devtools::install(".", dependencies="Suggests")
       '
+    env:
+      RENV_PATHS_CACHE: "/workspace/matt/renv"
+      RENV_PATHS_LIBRARY: "/workspace/matt/renv"
     command: echo 'Run R setup'
 
 # Settings
