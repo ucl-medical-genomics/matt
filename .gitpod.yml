@@ -11,8 +11,7 @@ tasks:
         r = getOption("repos"); r["CRAN"]="http://cran.us.r-project.org"; options(repos=r);
         install.packages("renv"); renv::init("/workspace/matt", bare=TRUE);
         install.packages(c("remotes", "devtools"));
-        remotes::install_github("ucl-medical-genomics/matt");
-        devtools::install(".", dependencies="Suggests")
+        devtools::install(".", dependencies=TRUE)
       '
     command: echo 'Run R setup'
 
