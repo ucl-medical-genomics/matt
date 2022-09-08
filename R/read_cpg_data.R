@@ -18,7 +18,7 @@
 #'
 #' @examples
 #' infile <- system.file("extdata", "bismark_coverage_CpG.bedgraph", package="matt")
-#' dt <- read_cpg_data(infile, align_to_reference=F)
+#' dt <- read_cpg_data(infile, align_to_reference=FALSE)
 read_cpg_data <-
   function(fname,
            dataset_id = NULL,
