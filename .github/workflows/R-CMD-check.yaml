@@ -85,22 +85,14 @@ jobs:
           sessioninfo::session_info(pkgs, include_base = TRUE)
         shell: Rscript {0}
 
-    - uses: r-lib/actions/check-r-package@v2
+      - uses: r-lib/actions/check-r-package@v2
         env:
           _R_CHECK_CRAN_INCOMING_: false
         with:
           args: 'c("--no-manual", "--as-cran")'
           error-on: '"error"'
           check-dir: '"check"'
-
-      # - name: Check
-      #   env:
-      #     _R_CHECK_CRAN_INCOMING_: false
-      #   run: |
-      #     options(crayon.enabled = TRUE)
-      #     rcmdcheck::rcmdcheck(args = c("--no-manual", "--as-cran"), error_on = "warning", check_dir = "check")
-      #   shell: Rscript {0}
-
+      
       - name: Show testthat output
         if: always()
         run: find check -name 'testthat.Rout*' -exec cat '{}' \; || true
