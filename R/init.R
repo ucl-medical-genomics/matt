@@ -1,4 +1,5 @@
 #' @import data.table
+#' @importFrom ggplot2 ggplot
 
 .matt_env <- new.env(parent = emptyenv())
 

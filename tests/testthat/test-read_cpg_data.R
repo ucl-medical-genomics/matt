@@ -6,8 +6,8 @@ test_that("read_cpg_data without cache", {
   # Read CpG data
   dt <- read_cpg_data(
     bed_2f, pipeline="bedgraph",
-    align_to_reference = F, use_cache=F,
-    collapse_strands = F
+    align_to_reference = FALSE, use_cache=FALSE,
+    collapse_strands = FALSE
   )
   
   # Assert that data.table with expected fields is returned
@@ -38,8 +38,8 @@ test_that("read_cpg_data using cache", {
   # Read CpG data from file
   dt <- read_cpg_data(
     bed_2f, dataset_id=test_id, pipeline="bedgraph",
-    align_to_reference = F, use_cache=T,
-    collapse_strands = F
+    align_to_reference = FALSE, use_cache=TRUE,
+    collapse_strands = FALSE
   )
   expect_true(file.exists(expected_cache_file))
   
