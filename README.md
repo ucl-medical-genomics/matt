@@ -1,7 +1,7 @@
 # MATT: Methylation Analysis ToolkiT
 [![R-CMD-check](https://github.com/ucl-medical-genomics/matt/workflows/R-CMD-check/badge.svg)](https://github.com/ucl-medical-genomics/matt/actions)
 
-> Pre-release (things may not fully work yet)
+> Pre-release (things may not fully work yet!)
 
 ## Introduction
 
